@@ -32,7 +32,8 @@ def haveSettings(root):
 def readSettings(root):
     path = getSettingsPath(root)
     settings = getDefaultSettings(root)
-    settings.update(plistlib.readPlist(path))
+    with open(path, 'rb') as f:
+        settings.update(plistlib.load(f))
     return settings
 
 def writeSettings(root, settings):
@@ -42,7 +43,8 @@ def writeSettings(root, settings):
     if settings["ignore"] == getDefaultIgnorePatterns():
         del settings["ignore"]
     path = getSettingsPath(root)
-    plistlib.writePlist(settings, path)
+    with open(path, 'wb') as f:
+        plistlib.dump(settings, f)
 
 def getArchiveDirectory(root, settings):
     archiveDirectory = settings.get("archiveDirectory")
